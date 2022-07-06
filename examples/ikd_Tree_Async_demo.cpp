@@ -4,7 +4,7 @@
 */
 
 
-#include "ikd_Tree.h"
+#include "ikd_Tree_impl.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <random>
@@ -17,6 +17,7 @@
 
 using PointType = pcl::PointXYZ;
 using PointVector = KD_TREE<PointType>::PointVector;
+template class KD_TREE<pcl::PointXYZ>;
 
 void colorize( const PointVector &pc, pcl::PointCloud<pcl::PointXYZRGB> &pc_colored, const std::vector<int> &color) {
     int N = pc.size();

@@ -1,14 +1,31 @@
-#pragma once
-#include <stdio.h>      // [wgh] Why so many C style? 
+/**
+ * @file ikd_Tree.h
+ * @author Guanhua Wang (you@domain.com)
+ * @brief a header only version of ikd-tree, C++ style.
+ * @version 0.1
+ * @date 2022-07-06
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Description: ikd-Tree: an incremental k-d tree for robotic applications 
+ * Author: Yixi Cai
+ * email: yixicai@connect.hku.hk
+**/
+
+#ifndef IKD_TREE_H_
+#define IKD_TREE_H_
+
+#include <cstdio> //#include <stdio.h>
 #include <queue>
-#include <pthread.h>    // [wgh] See a C++ stype version in branch 'main_cpp_stype'.
 #include <chrono>
-#include <time.h>
-#include <unistd.h>
-#include <math.h>
+#include <ctime> //#include <time.h>
+#include <cmath> //#include <math.h>
 #include <algorithm>
 #include <memory>
-#include <pcl/point_types.h>
+#include <Eigen/Core>
+
+#include <pthread.h> // 不确定c++<std::thread>是否兼容的情况下，不替代。
+#include <unistd.h> // Linux/Unix系统中内置头文件,包含一些系统服务函数接口。
 
 #define EPSS 1e-6
 #define Minimal_Unbalanced_Tree_Size 10     // wgh
@@ -38,10 +55,21 @@ struct BoxPointType{
 };
 
 // wgh 枚举ikdtree中的所有操作。
-enum operation_set {ADD_POINT, DELETE_POINT, DELETE_BOX, ADD_BOX, DOWNSAMPLE_DELETE, PUSH_DOWN};
+enum operation_set {
+    ADD_POINT, 
+    DELETE_POINT, 
+    DELETE_BOX, 
+    ADD_BOX, 
+    DOWNSAMPLE_DELETE, 
+    PUSH_DOWN
+};
 
 // wgh ？
-enum delete_point_storage_set {NOT_RECORD, DELETE_POINTS_REC, MULTI_THREAD_REC};
+enum delete_point_storage_set {
+    NOT_RECORD, 
+    DELETE_POINTS_REC, 
+    MULTI_THREAD_REC
+};
 
 // wgh 
 template <typename T>
@@ -62,8 +90,8 @@ class MANUAL_Q{
 
 // wgh 
 template<typename PointType>
-class KD_TREE{
-public:
+class KD_TREE {
+  public:
     using PointVector = vector<PointType, Eigen::aligned_allocator<PointType>>;
     using Ptr = shared_ptr<KD_TREE<PointType>>;
 
@@ -178,7 +206,7 @@ public:
 
     };    
 
-private:
+  private:
     // Multi-thread Tree Rebuild
     bool termination_flag = false;
     bool rebuild_flag = false;
@@ -229,7 +257,7 @@ private:
     static bool point_cmp_y(PointType a, PointType b); 
     static bool point_cmp_z(PointType a, PointType b); 
 
-public:
+  public:
     KD_TREE(float delete_param = 0.5, float balance_param = 0.6 , float box_length = 0.2);
     ~KD_TREE();
     void Set_delete_criterion_param(float delete_param);
@@ -256,4 +284,4 @@ public:
     int max_queue_size = 0;
 };
 
-
+#endif // IKD_TREE_H_

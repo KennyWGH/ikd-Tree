@@ -12,11 +12,21 @@ include_directories(
     ikd-Tree
 )
 
-add_executable(ikd_tree_demo examples/ikd_Tree_demo.cpp ikd-Tree/ikd_Tree.cpp)
+# add_executable(ikd_tree_demo examples/ikd_Tree_demo.cpp ikd-Tree/ikd_Tree.cpp)
+# target_link_libraries(ikd_tree_demo ${PCL_LIBRARIES})
+
+# add_executable(ikd_tree_async_demo examples/ikd_Tree_Async_demo.cpp ikd-Tree/ikd_Tree.cpp)
+# target_link_libraries(ikd_tree_async_demo ${PCL_LIBRARIES})
+
+# add_executable(ikd_tree_Search_demo examples/ikd_Tree_Search_demo.cpp ikd-Tree/ikd_Tree.cpp)
+# target_link_libraries(ikd_tree_Search_demo ${PCL_LIBRARIES})
+
+
+add_executable(ikd_tree_demo examples/ikd_Tree_demo.cpp)
 target_link_libraries(ikd_tree_demo ${PCL_LIBRARIES})
 
-add_executable(ikd_tree_async_demo examples/ikd_Tree_Async_demo.cpp ikd-Tree/ikd_Tree.cpp)
+add_executable(ikd_tree_async_demo examples/ikd_Tree_Async_demo.cpp)
 target_link_libraries(ikd_tree_async_demo ${PCL_LIBRARIES})
 
-add_executable(ikd_tree_Search_demo examples/ikd_Tree_Search_demo.cpp ikd-Tree/ikd_Tree.cpp)
+add_executable(ikd_tree_Search_demo examples/ikd_Tree_Search_demo.cpp)
 target_link_libraries(ikd_tree_Search_demo ${PCL_LIBRARIES})

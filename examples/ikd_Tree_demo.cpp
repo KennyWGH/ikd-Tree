@@ -4,7 +4,8 @@
     Email: yixicai@connect.hku.hk
 */
 
-#include <ikd_Tree.h>
+#include <ikd_Tree_impl.h>
+#include <pcl/point_types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <random>
@@ -12,6 +13,7 @@
 
 using PointType = ikdTree_PointType;
 using PointVector = KD_TREE<PointType>::PointVector;
+template class KD_TREE<ikdTree_PointType>;
 
 #define X_MAX 5.0
 #define X_MIN -5.0
