@@ -15,16 +15,15 @@
 #ifndef IKD_TREE_H_
 #define IKD_TREE_H_
 
-#include <cstdio> //#include <stdio.h>
+#include <cstdio>
 #include <queue>
 #include <chrono>
-#include <ctime> //#include <time.h>
-#include <cmath> //#include <math.h>
+#include <ctime>
+#include <cmath>
 #include <algorithm>
 #include <memory>
 #include <Eigen/Core>
-
-#include <pthread.h> // 不确定c++<std::thread>是否兼容的情况下，不替代。
+#include <pthread.h> // Linux/Unix系统接口，c++<std::thread>不能替代之。
 #include <unistd.h> // Linux/Unix系统中内置头文件,包含一些系统服务函数接口。
 
 #define EPSS 1e-6
