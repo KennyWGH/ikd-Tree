@@ -1,3 +1,7 @@
+# Update 20220714
+- 新增了`header_only_ikdtree`分支，只有两个头文件，非常方便直接嵌入您自己的工程中。
+- 在`header_only_ikdtree`分支中，修复了一些引起编译报警的代码(如int和unsigned int做比较，unused variable等)。
+
 # 中文注解
 「*读者在阅读此代码和注释前，应当至少阅读fast-lio2或者ikd-tree论文之一，并充分理解ikd-tree算法原理。*」  
 在Fast-Lio2中，`class KD_TREE` 被调用的`接口函数`&`成员变量`有（按调用顺序）：  
