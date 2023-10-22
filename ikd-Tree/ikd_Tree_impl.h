@@ -17,6 +17,8 @@
 
 #include "ikd_Tree.h"
 
+namespace ikdtreeNS {
+
 template <typename PointType>
 KD_TREE<PointType>::KD_TREE(float delete_param, float balance_param, float box_length) {
     delete_criterion_param = delete_param;
@@ -385,7 +387,7 @@ void KD_TREE<PointType>::Nearest_Search(
 {
     MANUAL_HEAP q(2*k_nearest); // wgh 预分配两倍空间。
     q.clear();
-    // wgh 交换内存空间（实质上是交换指针地址），相当于清空了Point_Distance？
+    // wgh 交换内存空间（实质上是交换指针地址），相当于清空了Point_Distance
     vector<float> ().swap(Point_Distance); 
     if (Rebuild_Ptr == nullptr || *Rebuild_Ptr != Root_Node){
         Search(Root_Node, k_nearest, point, q, max_dist); // wgh 实质的搜索函数，递归调用。
@@ -462,12 +464,15 @@ int KD_TREE<PointType>::Add_Points(PointVector & PointToAdd, bool downsample_on)
                 if (tmp_dist < min_dist){
                     min_dist = tmp_dist;
                     downsample_result = Downsample_Storage[index];
+                    /*注意，最终选出的这个点是{所有点中}离centroid最接近的点，不一定是新点*/
                 }
             }
             // wgh-- 如果当前没有re-balancing任务，也即没有并行线程，则直接执行`BoxDelete`和`插入一个点`。
             if (Rebuild_Ptr == nullptr || *Rebuild_Ptr != Root_Node){  
                 if (Downsample_Storage.size() > 1 || same_point(PointToAdd[i], downsample_result)){
-                    if (Downsample_Storage.size() > 0) Delete_by_range(&Root_Node, Box_of_Point, true, true);
+                    /*这个if里是说，如果这个box区域中已经有点了，先假意删除已有的点（仅label而非真删）*/
+                    /*感觉这个做法可以优化啊：如果要插入的点是已存在的点，直接退出就好了，不需要有假删和再插入这样的麻烦动作*/
+                    if (Downsample_Storage.size() > 0) { Delete_by_range(&Root_Node, Box_of_Point, true, true); }
                     Add_by_point(&Root_Node, downsample_result, true, Root_Node->division_axis);
                     tmp_counter ++;                      
                 }
@@ -892,7 +897,7 @@ void KD_TREE<PointType>::Add_by_range(KD_TREE_NODE ** root, BoxPointType boxpoin
 template <typename PointType>
 void KD_TREE<PointType>::Add_by_point(KD_TREE_NODE ** root, PointType point, bool allow_rebuild, int father_axis)
 {     
-    // wgh 如果已经到达叶子节点，直接插入。
+    // wgh 如果已经到达叶子节点，直接插入，然后返回 —— 在递归工作流中意味着触底。
     if (*root == nullptr){
         *root = new KD_TREE_NODE;
         InitTreeNode(*root);
@@ -902,7 +907,7 @@ void KD_TREE<PointType>::Add_by_point(KD_TREE_NODE ** root, PointType point, boo
         return;
     }
 
-    // wgh `工作中`标志位置true，同步记录到Logger中。
+    // wgh `工作中`标志位:置true，同步记录到Logger中。
     (*root)->working_flag = true;
     Operation_Logger_Type add_log;
     // struct timespec Timeout; // wgh: unused variable.
@@ -1587,6 +1592,7 @@ int MANUAL_Q<T>::size(){
     return counter;
 }
 
+} // namespace ikdtreeNS
 
 #endif // IKD_TREE_IMPL_H_
 

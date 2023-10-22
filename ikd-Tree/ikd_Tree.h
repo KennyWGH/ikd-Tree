@@ -15,21 +15,23 @@
 #ifndef IKD_TREE_H_
 #define IKD_TREE_H_
 
-#include <cstdio>
+#include <stdio.h>
 #include <queue>
 #include <chrono>
-#include <ctime>
-#include <cmath>
+#include <time.h>
+#include <math.h>
 #include <algorithm>
 #include <memory>
-#include <Eigen/Core>
 #include <pthread.h> // Linux/Unix系统接口，c++<std::thread>不能替代之。
 #include <unistd.h> // Linux/Unix系统中内置头文件,包含一些系统服务函数接口。
+#include <pcl/point_types.h>
+
+namespace ikdtreeNS {
 
 #define EPSS 1e-6
 #define Minimal_Unbalanced_Tree_Size 10     // wgh
 #define Multi_Thread_Rebuild_Point_Num 1500 // wgh 需要重置的subtree点数达到此阈值，则用额外线程处理。
-#define DOWNSAMPLE_SWITCH true
+#define DOWNSAMPLE_SWITCH true              // wgh 新增点时，是否启动ikdtree内的downsample
 #define ForceRebuildPercentage 0.2          // wgh 
 #define Q_LEN 1000000                       // wgh 支持的最大队列长度
 
@@ -39,12 +41,13 @@ using namespace std;
 struct ikdTree_PointType
 {
     float x,y,z;
-    // wgh 为什么这里不用const&做形参？
-    ikdTree_PointType (float px = 0.0f, float py = 0.0f, float pz = 0.0f){
+    ikdTree_PointType (const float& px = 0.0f, const float& py = 0.0f, const float& pz = 0.0f){
         x = px;
         y = py;
         z = pz;
     }
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 // wgh 定义box（一个box由两个边界点定义）。
@@ -109,7 +112,7 @@ class KD_TREE {
         bool working_flag = false;
         float radius_sq;
         pthread_mutex_t push_down_mutex_lock;
-        float node_range_x[2], node_range_y[2], node_range_z[2];    // tree对应的包络Box
+        float node_range_x[2], node_range_y[2], node_range_z[2];    // tree对应的包络Box，即时更新，随时可查询
         KD_TREE_NODE *left_son_ptr = nullptr;       // 左子树
         KD_TREE_NODE *right_son_ptr = nullptr;      // 右子树
         KD_TREE_NODE *father_ptr = nullptr;         // 父树
@@ -282,5 +285,7 @@ class KD_TREE {
     KD_TREE_NODE * Root_Node = nullptr;
     int max_queue_size = 0;
 };
+
+} // namespace ikdtreeNS
 
 #endif // IKD_TREE_H_
