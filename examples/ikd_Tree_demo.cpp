@@ -11,6 +11,9 @@
 #include <random>
 #include <algorithm>
 
+using namespace std;
+using namespace ikdtreeNS;
+
 using PointType = ikdTree_PointType;
 using PointVector = KD_TREE<PointType>::PointVector;
 template class KD_TREE<ikdTree_PointType>;

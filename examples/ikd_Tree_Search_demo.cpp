@@ -14,6 +14,9 @@
 #include <pcl/visualization/pcl_visualizer.h>
 
 
+using namespace std;
+using namespace ikdtreeNS;
+
 using PointType = pcl::PointXYZ;
 using PointVector = KD_TREE<PointType>::PointVector;
 template class KD_TREE<pcl::PointXYZ>;
